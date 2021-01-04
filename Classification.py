@@ -6,8 +6,21 @@ import pandas as pd
 import numpy as np
 
 
-kidney_samples_csv_path = "C:\\Users\\royj1\\Desktop\\University\\הנדסת מערכות מידע\\שנה ד\\פרויקט גמר\\דאטה\\kidney_samples.csv"
+kidney_samples_csv_path = "C:\\Users\\Naor\\Google Drive\\שנה ד'\\פרויקט גמר\\profiles\\Bronchus_and_lung\\bronchus_and_lung_samples.csv"
 features = pd.read_csv(kidney_samples_csv_path)
+
+# # ---Oversampling---
+# # Class count
+# count_class_tumor, count_class_normal = features.sample_type.value_counts()
+# # Divide by class
+# features_normal = features[features['sample_type'] == "Normal"]
+# features_tumor = features[features['sample_type'] == "Tumor"]
+#
+# features_normal_over = features_normal.sample(count_class_tumor, replace=True)
+# features = pd.concat([features_tumor, features_normal_over], axis=0)
+#
+# print('Random over-sampling:')
+# print(features.sample_type.value_counts())
 
 # Labels are the values we want to predict
 labels = np.array(features['sample_type'])
@@ -27,7 +40,7 @@ print('Training Labels Shape:', train_labels.shape)
 print('Testing Features Shape:', test_features.shape)
 print('Testing Labels Shape:', test_labels.shape)
 
-random_forest = RandomForestClassifier(n_estimators=1000)
+random_forest = RandomForestClassifier(n_estimators=100)
 random_forest.fit(train_features, train_labels)
 predictions = random_forest.predict(test_features)
 accuracy = metrics.accuracy_score(test_labels, predictions)
