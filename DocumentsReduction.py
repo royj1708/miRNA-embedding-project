@@ -112,6 +112,7 @@ def write_to_csv_file(record, organ: str):
 # ------------------------------------------------------ Main ----------------------------------------------------------
 # convert_all_profiles()
 # print(create_health_condition_dictionary(SAMPLES_FILE))
+PROFILES_DIRECTORY = "C:\\Users\\Naor\\Google Drive\\שנה ד'\\פרויקט גמר\\profiles\\Bronchus_and_lung"
 profiles_directory = ""
-samples_file = ""
-create_dataset(profiles_directory, samples_file, "kidney")
+samples_file = "C:\\Users\\Naor\\Google Drive\\שנה ד'\\פרויקט גמר\\profiles\\Bronchus_and_lung\\gdc_sample_sheet.tsv"
+create_dataset(PROFILES_DIRECTORY, samples_file, "bronchus_and_lung")

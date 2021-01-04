@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/miRNA_Embedding.iml" filepath="$PROJECT_DIR$/.idea/miRNA_Embedding.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/miRNA-embedding-project.iml" filepath="$PROJECT_DIR$/.idea/miRNA-embedding-project.iml" />
     </modules>
   </component>
 </project>
