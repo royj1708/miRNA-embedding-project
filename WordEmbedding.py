@@ -5,7 +5,6 @@ from smart_open import smart_open
 import os
 from gensim.models.word2vec import Word2Vec
 from multiprocessing import cpu_count
-import gensim.downloader as api
 import numpy as np
 import xlrd
 from datetime import datetime
@@ -51,6 +50,18 @@ def convert_documents_to_lists():
 
     return list_of_all_documents
 
+def convert_documents_to_dictionary():
+    dict_of_all_documents = {}
+    for (root, dirs, files) in os.walk(DOCUMENTS_DIRECTORY, topdown=True):
+        for file in files:
+            try:
+                if file[-4:] == ".txt":
+                    dict_of_all_documents[file] = (create_list_from_document(os.path.join(DOCUMENTS_DIRECTORY, file)))
+
+            except:
+                continue
+
+    return dict_of_all_documents
 
 def get_classification_accuracy():
     pass
@@ -84,24 +95,4 @@ main()
                 # we need to take all the miRNA vectors and try the classification models, then record the accuracy rate
                 # with the values of the parameters
 
-# dictionary = corpora.Dictionary(simple_preprocess(line, deacc=True) for line in open('doc.txt', encoding='utf-8'))
-
-# # Download dataset
-# data = []
-# dataset = api.load("text8")
-# data.extend([d for d in dataset])
-#
-# # Split the data into 2 parts. Part 2 will be used later to update the model
-# data_part1 = data[:1000]
-# data_part2 = data[1000:]
-#
-# # Train Word2Vec model. Defaults result vector size = 100
-# model = Word2Vec(data, min_count=0, workers=cpu_count())
-# result = model.most_similar(positive=['woman', 'king'], negative=['man'], topn=3)
-# print(result)
-#
-#
-#
-# model.build_vocab(data_part2, update=True)
-# model.train(data_part2, total_examples=model.corpus_count, epochs=model.iter)
 
