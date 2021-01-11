@@ -1,6 +1,7 @@
 import csv
 import os
 import random
+import numpy as np
 
 
 def read_profile_into_dictionary(profile_path: str):
