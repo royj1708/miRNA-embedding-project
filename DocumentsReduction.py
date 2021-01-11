@@ -19,7 +19,11 @@ def read_profile_into_dictionary(profile_path: str):
             continue
 
         miRNA_expression = miRNA_expression.split()
-        miRNA_counts[miRNA_expression[0]] = miRNA_expression[1]
+
+        if np.ceil(float(miRNA_expression[2])) - float(miRNA_expression[2]) > 0.5:
+            miRNA_counts[miRNA_expression[0]] = int(np.floor(float(miRNA_expression[2])))
+        else:
+            miRNA_counts[miRNA_expression[0]] = int(np.ceil(float(miRNA_expression[2])))
 
     return miRNA_counts
 
@@ -110,9 +114,14 @@ def write_to_csv_file(record, organ: str):
 
 
 # ------------------------------------------------------ Main ----------------------------------------------------------
-# convert_all_profiles()
+profiles_directory = '/Users/royjudes/Desktop/miRNA embedding project/profiles'
+documents_directory = '/Users/royjudes/Desktop/miRNA embedding project/documents'
+# convert_all_profiles(profiles_directory, documents_directory)
 # print(create_health_condition_dictionary(SAMPLES_FILE))
-PROFILES_DIRECTORY = "C:\\Users\\Naor\\Google Drive\\שנה ד'\\פרויקט גמר\\profiles\\brain"
-profiles_directory = ""
-samples_file = "C:\\Users\\Naor\\Google Drive\\שנה ד'\\פרויקט גמר\\profiles\\brain\\gdc_sample_sheet.tsv"
-create_dataset(PROFILES_DIRECTORY, samples_file, "brain")
+# PROFILES_DIRECTORY = "C:\\Users\\Naor\\Google Drive\\שנה ד'\\פרויקט גמר\\profiles\\Bronchus_and_lung"
+# profiles_directory = ""
+samples_file = "/Users/royjudes/Desktop/miRNA embedding project/gdc_sample_sheet.tsv"
+# create_dataset(PROFILES_DIRECTORY, samples_file, "bronchus_and_lung")
+
+# create_dataset(profiles_directory, samples_file, 'kidney')
+# convert_all_profiles(profiles_directory, documents_directory)
