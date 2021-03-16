@@ -7,10 +7,15 @@ from datetime import datetime
 import pandas as pd
 import csv
 from DocumentsReduction import create_health_condition_dictionary
+from csv import reader
+from numpy import dot
+from numpy.linalg import norm
 
 
-DOCUMENTS_DIRECTORY = "C:\\Users\\royj1\\Desktop\\University\\הנדסת מערכות מידע\\שנה ד\\פרויקט גמר\\דאטה\\Testing\\b"
-VOCABULARY_FILE = "C:\\Users\\royj1\\Desktop\\University\\הנדסת מערכות מידע\\שנה ד\\פרויקט גמר\\דאטה\\all_mirnas.xls"
+# DOCUMENTS_DIRECTORY = "C:\\Users\\royj1\\Desktop\\University\\הנדסת מערכות מידע\\שנה ד\\פרויקט גמר\\דאטה\\Testing\\b"
+DOCUMENTS_DIRECTORY = '/Users/royjudes/Desktop/miRNA embedding project/documents'
+VOCABULARY_FILE = '/Users/royjudes/Desktop/miRNA embedding project/all_mirnas.xls'
+# VOCABULARY_FILE = "C:\\Users\\royj1\\Desktop\\University\\הנדסת מערכות מידע\\שנה ד\\פרויקט גמר\\דאטה\\all_mirnas.xls"
 # LOG_FILE_PATH = "C:\\Users\\royj1\\Desktop\\University\\הנדסת מערכות מידע\\שנה ד\\פרויקט גמר\\דאטה\\Testing\\Log.txt"
 
 
@@ -98,6 +103,45 @@ def compute_wmd_for_profiles(profiles_as_list, keys, health_condition_dictionary
                 writer.writerow(record)
 
 
+def load_miRNA_embeddings_dictionary(path: str):
+    with open(path, 'r', newline='') as embeddings_file:
+        csv_reader = reader(embeddings_file)
+        prev_row = []
+        embeddings_dictionary = {}
+        for row in csv_reader:
+            if len(row) == 300:
+                vector = []
+                for value in row:
+                    vector.append(float(value))
+                embeddings_dictionary[prev_row[0]] = vector
+
+            prev_row = row
+
+    return embeddings_dictionary
+
+
+def compute_cossim_for_miRNAs(embeddings_dictionary):
+    with open('miRNAs_cossim_kidney.csv', 'a', newline='') as file:
+        writer = csv.writer(file)
+        already_computed = []
+        counter = 1
+        for miRNA_a in embeddings_dictionary:
+            already_computed.append(miRNA_a)
+            for miRNA_b in embeddings_dictionary:
+                if miRNA_b in already_computed:
+                    continue
+
+                mir_a_vec = embeddings_dictionary[miRNA_a]
+                mir_b_vec = embeddings_dictionary[miRNA_b]
+                cos_sim = dot(mir_a_vec, mir_b_vec) / (norm(mir_a_vec) * norm(mir_b_vec))
+
+                print(counter)
+                counter += 1
+                writer.writerow([miRNA_a, miRNA_b, cos_sim])
+
+
+
+
 # def write_into_log_file(size: int, window: int, min_count: int, model: str, results):
 #     content = f"Time: {datetime.now().strftime('%d/%m/%Y %H:%M:%S')}\n" \
 #               f"Results - {model}:\n" \
@@ -110,12 +154,12 @@ def compute_wmd_for_profiles(profiles_as_list, keys, health_condition_dictionary
 
 def main():
     all_profiles = convert_documents_to_dictionary()
-    health_condition_dictionary = create_health_condition_dictionary(
-        '/Users/royjudes/Desktop/miRNA embedding project/gdc_sample_sheet.tsv')
+    # health_condition_dictionary = create_health_condition_dictionary(
+    #     '/Users/royjudes/Desktop/miRNA embedding project/gdc_sample_sheet.tsv')
     profiles_as_list = list(all_profiles.values())
-    keys = list(all_profiles.keys())
+    # keys = list(all_profiles.keys())
     model = Word2Vec(profiles_as_list, min_count=0, size=300, window=5, workers=cpu_count())
-    compute_wmd_for_profiles(profiles_as_list, keys, health_condition_dictionary, model)
+    # compute_wmd_for_profiles(profiles_as_list, keys, health_condition_dictionary, model)
 
 
     # profiles = convert_documents_csv_to_lists('/Users/royjudes/Desktop/miRNA embedding project/kidney_samples.csv')
@@ -138,12 +182,23 @@ def main():
 
     # model = Word2Vec(profiles, min_count=0, size=300, window=5, workers=cpu_count())
 
-    # samples_file = '/Users/royjudes/Desktop/miRNA embedding project/kidney_samples.csv'
+    # CREATING CSV WITH MIRNA EMBEDDINGS
+    # samples_file = '/Users/royjudes/Desktop/miRNA embedding project/kidney_samples_rpm.csv'
     # samples_df = pd.read_csv(samples_file)
     # sample_types = samples_df["sample_type"]
     # samples_df = samples_df.drop('sample_type', axis=1)
     # miRNAs = list(samples_df.columns)
+    #
+    # for miRNA in miRNAs:
+    #     try:
+    #         with open('miRNA_embeddings_kidney.csv', 'a', newline='') as file:
+    #             writer = csv.writer(file)
+    #             writer.writerow([miRNA])
+    #             writer.writerow(model[miRNA])
+    #     except:
+    #         continue
 
+    # CREATING PROFILES WITH EMBEDDING REPRESENTATION
     # for index, profile in samples_df.iterrows():
     #     miRNAs_amount_in_profile = 0
     #     profile_vector = []
@@ -155,14 +210,14 @@ def main():
     #             expression = float(profile[miRNA])  # the miRNA expression in the profile
     #             miRNAs_amount_in_profile += expression  # sum of all miRNAs in the profile
     #             profile_vector = np.add(profile_vector, np.array(miRNA_vector)*expression)
-
+    #
     #         except:
     #             continue
-
+    #
     #     profile_vector /= miRNAs_amount_in_profile
     #     profile_vector = list(profile_vector)
     #     profile_vector.append(sample_types[index])
-
+    #
     #     with open('embedded_profiles_0_300_5.csv', 'a', newline='') as file:
     #         writer = csv.writer(file)
     #         writer.writerow(profile_vector)
@@ -171,7 +226,10 @@ def main():
     # distance = model.wmdistance(all_profiles[0], all_profiles[1])
     # print(distance)
 
-main()
+dictionary = load_miRNA_embeddings_dictionary('/Users/royjudes/Desktop/miRNA embedding project/miRNA_embeddings_kidney.csv')
+compute_cossim_for_miRNAs(dictionary)
+
+# main()
     # for size in [100, 200, 300, 400, 500]:
     #     for window in [3, 4, 5, 6, 7]:
     #         for min_count in [0, 5, 10, 15, 20]:

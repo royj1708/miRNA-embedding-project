@@ -26,6 +26,9 @@ def read_profile_into_dictionary(profile_path: str):
         else:
             miRNA_counts[miRNA_expression[0]] = int(np.ceil(float(miRNA_expression[2])))
 
+        # for unnormalized counts
+        # miRNA_counts[miRNA_expression[0]] = int(miRNA_expression[1])
+
     return miRNA_counts
 
 
@@ -82,7 +85,8 @@ def create_health_condition_dictionary(path: str):
         for sample in samples_list:
             file_name = sample[1]
             sample_type = 'Normal' if 'Normal' in sample[7] else 'Tumor'
-            health_condition_dict[file_name] = sample_type
+            project = sample[4]
+            health_condition_dict[file_name] = sample_type, project
     return health_condition_dict
 
 
@@ -97,11 +101,13 @@ def create_dataset(profile_path: str, samples_file_path: str, organ_name: str):
                     if not header:
                         features_names = list(miRNA_counts.keys())
                         features_names.append("sample_type")
+                        features_names.append("project")
                         write_to_csv_file(features_names, organ_name)
                         header = True
                     filename = os.path.split(file)[1]
-                    sample_type = health_condition_dict[filename]
+                    sample_type, project = health_condition_dict[filename]
                     miRNA_counts["sample_type"] = sample_type
+                    miRNA_counts["project"] = project
                     new_record = list(miRNA_counts.values())
                     write_to_csv_file(new_record, organ_name)
             except:
@@ -109,7 +115,7 @@ def create_dataset(profile_path: str, samples_file_path: str, organ_name: str):
 
 
 def write_to_csv_file(record, organ: str):
-    with open(f'{organ}_samples.csv', 'a', newline='') as file:
+    with open(f'{organ}_samples_counts_project_names_health_condition.csv', 'a', newline='') as file:
         writer = csv.writer(file)
         writer.writerow(record)
 
@@ -122,7 +128,7 @@ documents_directory = '/Users/royjudes/Desktop/miRNA embedding project/documents
 # PROFILES_DIRECTORY = "C:\\Users\\Naor\\Google Drive\\שנה ד'\\פרויקט גמר\\profiles\\Bronchus_and_lung"
 # profiles_directory = ""
 samples_file = "/Users/royjudes/Desktop/miRNA embedding project/gdc_sample_sheet.tsv"
-# create_dataset(PROFILES_DIRECTORY, samples_file, "bronchus_and_lung")
+create_dataset(profiles_directory, samples_file, "kidney")
 
 # create_dataset(profiles_directory, samples_file, 'kidney')
 # convert_all_profiles(profiles_directory, documents_directory)

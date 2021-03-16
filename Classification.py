@@ -5,7 +5,9 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn import metrics
 import pandas as pd
 import numpy as np
-import imblearn
+from imblearn.over_sampling import SMOTE
+from imblearn.under_sampling import NearMiss
+from collections import Counter
 
 
 def oversampling(features):
@@ -15,7 +17,7 @@ def oversampling(features):
     # Class count
     count_class_tumor, count_class_normal = features.sample_type.value_counts()
     # Divide by class
-    features_normal = features[features['sample_type'] == "Normal"]
+    features_normal = features[featur['sample_type'] == "Normal"]
     features_tumor = features[features['sample_type'] == "Tumor"]
 
     features_normal_over = features_normal.sample(count_class_tumor, replace=True)
@@ -66,17 +68,27 @@ def main(samples_csv_path):
     # features = oversampling(features)
     # Labels are the values we want to predict
     labels = np.array(features['sample_type'])
+    print(Counter(labels))
     # Remove the labels from the features
     # axis 1 refers to the columns
     features = features.drop('sample_type', axis=1)
     # Saving feature names for later use
     feature_list = list(features.columns)
     # Convert to numpy array
-    features = np.array(features)
+    # features = np.array(features)
+
+    # SMOTE
+    # features_smote, labels_smote = smote(features, labels)
+    # print(Counter(labels_smote))
 
     # Split the data into training and testing sets
-    train_features, test_features, train_labels, test_labels = train_test_split(features, labels, test_size=0.3,
-                                                                                stratify=labels)
+    train_features, test_features, train_labels, test_labels = train_test_split(features, labels, test_size=0.3) #, stratify=labels)
+
+    # SMOTE
+    smt = SMOTE()
+    train_features, train_labels = smt.fit_sample(train_features, train_labels)
+    print(Counter(train_labels))
+
 
     # print('Training Features Shape:', train_features.shape)
     # print('Training Labels Shape:', train_labels.shape)
@@ -100,7 +112,7 @@ def main(samples_csv_path):
     print("Feature Importance:\n", random_forest_feature_importance, "\n")
     for index, feature in enumerate(sorted(feature_importance_dict, key=feature_importance_dict.get, reverse=True)):
         print(f"MIR: {feature}, Importance: {feature_importance_dict[feature]}")
-        if index == 10:
+        if index == 100:
             break
 
     # -------------------------------------------- SVC --------------------------------------------
@@ -128,7 +140,7 @@ def main(samples_csv_path):
 # kidney_embedded_samples_csv_path = "C:\\Users\\Naor\\Google Drive\\שנה ד'\\פרויקט גמר\\profiles\Kidney\\embedded_profiles.csv"
 
 kidney_embedded_samples_csv_path = 'embedded_profiles_0_300_5.csv'
-kidney_samples_csv_path = '/Users/royjudes/Desktop/miRNA embedding project/kidney_samples.csv'
+kidney_samples_csv_path = '/Users/royjudes/Desktop/miRNA embedding project/kidney_samples_rpm.csv'
 
 print("<<<<<<<<<<< RESULTS WITHOUT EMBEDDING: >>>>>>>>>>>")
 main(kidney_samples_csv_path)
@@ -136,3 +148,4 @@ print()
 print()
 print("<<<<<<<<<<< RESULTS WITH EMBEDDING: >>>>>>>>>>>")
 main(kidney_embedded_samples_csv_path)
+
