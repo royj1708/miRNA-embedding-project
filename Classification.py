@@ -139,7 +139,10 @@ def main(samples_csv_path):
 # kidney_samples_csv_path = "C:\\Users\\Naor\\Google Drive\\שנה ד'\\פרויקט גמר\\profiles\\Bronchus_and_lung\\bronchus_and_lung_samples.csv"
 # kidney_embedded_samples_csv_path = "C:\\Users\\Naor\\Google Drive\\שנה ד'\\פרויקט גמר\\profiles\Kidney\\embedded_profiles.csv"
 
-kidney_embedded_samples_csv_path = 'embedded_profiles_0_300_5.csv'
+# kidney_embedded_samples_csv_path = 'embedded_profiles_0_300_5.csv'
+# kidney_embedded_samples_csv_path = '/Users/royjudes/Desktop/miRNA embedding project/embedding configurations/0_300_2/embedded_profiles_0_300_2.csv'
+# kidney_embedded_samples_csv_path = '/Users/royjudes/Desktop/miRNA embedding project/embedding configurations/0_300_15/embedded_profiles_0_300_15.csv'
+kidney_embedded_samples_csv_path = '/Users/royjudes/Desktop/miRNA embedding project/embedding configurations/0_100_5/embedded_profiles_0_100_5.csv'
 kidney_samples_csv_path = '/Users/royjudes/Desktop/miRNA embedding project/kidney_samples_rpm.csv'
 
 print("<<<<<<<<<<< RESULTS WITHOUT EMBEDDING: >>>>>>>>>>>")
