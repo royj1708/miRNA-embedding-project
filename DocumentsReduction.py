@@ -123,10 +123,14 @@ def write_to_csv_file(record, organ: str):
 # ------------------------------------------------------ Main ----------------------------------------------------------
 profiles_directory = '/Users/royjudes/Desktop/miRNA embedding project/profiles'
 documents_directory = '/Users/royjudes/Desktop/miRNA embedding project/documents'
+
 # convert_all_profiles(profiles_directory, documents_directory)
 # print(create_health_condition_dictionary(SAMPLES_FILE))
 # PROFILES_DIRECTORY = "C:\\Users\\Naor\\Google Drive\\שנה ד'\\פרויקט גמר\\profiles\\Bronchus_and_lung"
 # profiles_directory = ""
+
+
+
 samples_file = "/Users/royjudes/Desktop/miRNA embedding project/gdc_sample_sheet.tsv"
 create_dataset(profiles_directory, samples_file, "kidney")
 
