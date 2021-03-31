@@ -2,15 +2,16 @@ import csv
 import os
 import random
 import numpy as np
+from Bio import SeqIO
 
 
 def read_profile_into_dictionary(profile_path: str):
     """
+    OLD VERSION - relevant to raw profiles of hairpin miRNAs.
     Gets a path to a text file of a miRNA profile and creates a dictionary that maps each miRNA to its expression.
     :param profile_path: the name of the text file
     :return: dictionary that maps each miRNA to its expression
     """
-    # need to join the directories between the main dir and the file to filename
     miRNA_counts = {}
     first_line = True
     profile_file = open(profile_path, 'r')
@@ -34,6 +35,7 @@ def read_profile_into_dictionary(profile_path: str):
 
 def convert_all_profiles(profiles_directory: str, documents_directory: str):
     """
+    OLD VERSION - relevant to raw profiles of hairpin miRNAs.
     Reads all the text files of the miRNA profiles, then creates a document for each one. The document consists of
     the name of each miRNA the amount of times it appeared in the profile.
     """
@@ -48,9 +50,77 @@ def convert_all_profiles(profiles_directory: str, documents_directory: str):
                 continue
 
 
+def read_mature_profile_into_dictionary(profile_path: str, mature_dict: dict):
+    """
+    NEW VERSION - relevant to formatted profiles of mature miRNAs.
+    Gets a path to a csv file of a mature miRNA profile and creates a dictionary that maps each miRNA to its expression.
+
+    :param mature_dict: dictionary that maps each 'MIMAT' to 'hsa'.
+    :param profile_path: the name of the csv file.
+    :return: dictionary that maps each miRNA to its expression.
+    """
+    miRNA_counts = {}
+    first_line = True
+    with open(profile_path, 'r') as profile:
+        for miRNA_expression in profile:
+            if first_line:
+                first_line = False
+                continue
+
+            miRNA_expression = miRNA_expression.split(",")
+            mature_MIMAT = miRNA_expression[0]
+            miRNA_rpm = float(miRNA_expression[-2])
+
+            if np.ceil(miRNA_rpm) - miRNA_rpm > 0.5:
+                miRNA_counts[mature_dict[mature_MIMAT]] = int(np.floor(miRNA_rpm))
+            else:
+                miRNA_counts[mature_dict[mature_MIMAT]] = int(np.ceil(miRNA_rpm))
+
+    return miRNA_counts
+
+
+def convert_all_mature_profiles(profiles_directory: str, documents_directory: str, mature_dict: dict):
+    """
+    NEW VERSION - relevant to formatted profiles of mature miRNAs.
+    Reads all the text files of the fixed formatted mature miRNA profiles, then creates a document for each one.
+    The document consists of the name of each miRNA the amount of times it appeared in the profile.
+    """
+    for (root, dirs, files) in os.walk(profiles_directory, topdown=True):
+        for file in files:
+            try:
+                if file[-4:] == ".csv":
+                    miRNA_counts = read_mature_profile_into_dictionary(os.path.join(root, file), mature_dict)
+                    filename = os.path.split(file)[1]
+                    convert_profile_to_document(miRNA_counts, filename[:-4], documents_directory)
+            except:
+                continue
+
+
+def create_mature_names_dictionary(fasta_file_path: str):
+    """
+    Creates a dictionary that maps the mature accession (MIMAT) to its name (hsa).
+
+    :param fasta_file_path: path to the fasta file that contains all of the different mature miRNAs, with both their
+    'MIMAT' and 'hsa' names.
+    :return: a dictionary that maps the mature accession (MIMAT) to its name (hsa).
+    """
+    mature_dict = {}
+    with open(fasta_file_path, 'r') as file:
+        for record in SeqIO.parse(file, 'fasta'):
+            description = record.description.split(" ")
+            mature_MIMAT = description[1]
+            mature_hsa = description[0]
+            if "hsa" not in mature_hsa:
+                continue
+            mature_dict[mature_MIMAT] = mature_hsa
+
+    return mature_dict
+
+
 def convert_profile_to_document(miRNA_counts: dict, filename: str, documents_directory: str):
     """
     Creates a document for a given dictionary that maps a miRNA to its expression in a certain profile.
+
     :param miRNA_counts: the dictionary that maps a miRNA to its expression.
     :param filename: the name of the file of the profile (without extension).
     """
@@ -78,6 +148,13 @@ def convert_to_list_of_miRNA_expression(miRNA_counts: dict):
 
 
 def create_health_condition_dictionary(path: str):
+    """
+    Creates a dictionary that maps each profile (by its filename) to the health condition of the profile
+    (Normal or Tumor).
+
+    :param path: path to the tsv file that contains the metadata of the profiles.
+    :return: the dictionary with the profiles' health conditions.
+    """
     health_condition_dict = {}
     with open(path, 'r') as samples_file:
         samples_list = csv.reader(samples_file, delimiter="\t")
@@ -91,6 +168,14 @@ def create_health_condition_dictionary(path: str):
 
 
 def create_dataset(profile_path: str, samples_file_path: str, organ_name: str):
+    """
+    Creates a csv file with the profiles as rows and miRNAs and health condition as columns. The file
+    contains the normalized counts of each miRNA in each profile.
+
+    :param profile_path: path to the directory of the profiles
+    :param samples_file_path: path to the tsv file that contains the metadata of the profiles.
+    :param organ_name: the name of the organ.
+    """
     header = False
     health_condition_dict = create_health_condition_dictionary(samples_file_path)
     for (root, dirs, files) in os.walk(profile_path, topdown=True):
@@ -121,14 +206,24 @@ def write_to_csv_file(record, organ: str):
 
 
 # ------------------------------------------------------ Main ----------------------------------------------------------
-profiles_directory = '/Users/royjudes/Desktop/miRNA embedding project/profiles'
+# profiles_directory = '/Users/royjudes/Desktop/miRNA embedding project/profiles'
+# documents_directory = '/Users/royjudes/Desktop/miRNA embedding project/documents'
+
+profiles_directory = '/Users/royjudes/Desktop/miRNA embedding project/profiles/target'
 documents_directory = '/Users/royjudes/Desktop/miRNA embedding project/documents'
+fasta_file_path = "/Users/royjudes/Desktop/miRNA embedding project/a/mature.fa"
+
+mature_dict = create_mature_names_dictionary(fasta_file_path)
+convert_all_mature_profiles(profiles_directory, documents_directory, mature_dict)
+
 # convert_all_profiles(profiles_directory, documents_directory)
 # print(create_health_condition_dictionary(SAMPLES_FILE))
 # PROFILES_DIRECTORY = "C:\\Users\\Naor\\Google Drive\\שנה ד'\\פרויקט גמר\\profiles\\Bronchus_and_lung"
 # profiles_directory = ""
-samples_file = "/Users/royjudes/Desktop/miRNA embedding project/gdc_sample_sheet.tsv"
-create_dataset(profiles_directory, samples_file, "kidney")
+
+
+# samples_file = "/Users/royjudes/Desktop/miRNA embedding project/gdc_sample_sheet.tsv"
+# create_dataset(profiles_directory, samples_file, "kidney")
 
 # create_dataset(profiles_directory, samples_file, 'kidney')
 # convert_all_profiles(profiles_directory, documents_directory)
