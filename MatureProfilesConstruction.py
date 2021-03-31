@@ -126,7 +126,6 @@ def read_profile_into_dictionary(profile_path: str, mature_dict: dict):
     :param mature_dict: dictionary that maps each 'MIMAT' to 'hsa'
     :return: dictionary that maps each miRNA to its expression
     """
-    # need to join the directories between the main dir and the file to filename
     miRNA_counts = {}
     first_line = True
     with open(profile_path, 'r') as profile:
