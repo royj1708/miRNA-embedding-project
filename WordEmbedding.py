@@ -15,7 +15,7 @@ from numpy.linalg import norm
 # VOCABULARY_FILE = "C:\\Users\\royj1\\Desktop\\University\\הנדסת מערכות מידע\\שנה ד\\פרויקט גמר\\דאטה\\all_mirnas.xls"
 # LOG_FILE_PATH = "C:\\Users\\royj1\\Desktop\\University\\הנדסת מערכות מידע\\שנה ד\\פרויקט גמר\\דאטה\\Testing\\Log.txt"
 
-DOCUMENTS_DIRECTORY = '/Users/royjudes/Desktop/miRNA embedding project/documents'
+DOCUMENTS_DIRECTORY = '/Users/royjudes/Desktop/miRNA embedding project/bronchus/documents'
 # VOCABULARY_FILE = '/Users/royjudes/Desktop/miRNA embedding project/all_mirnas.xls'
 
 
@@ -175,7 +175,7 @@ def load_miRNA_embeddings_dictionary(path: str):
 
 
 def compute_cossim_for_miRNAs(embeddings_dictionary, counts_dict):
-    with open('mature_miRNAs_cossim_kidney.csv', 'a', newline='') as file:
+    with open('mature_miRNAs_cossim_bronchus.csv', 'a', newline='') as file:
         writer = csv.writer(file)
         writer.writerow(['miRNA_a', 'avg_rpm_a', 'miRNA_b', 'avg_rpm_b', 'cos_sim'])
         already_computed = []
@@ -222,11 +222,11 @@ def main():
     model = Word2Vec(profiles_as_list, min_count=0, size=300, window=5, workers=cpu_count())
     # compute_wmd_for_profiles(profiles_as_list, keys, health_condition_dictionary, model)
 
-    samples_file = "/Users/royjudes/Desktop/miRNA embedding project/profiles_matures_dataset.csv"
-    embedded_profiles_path = 'embedded_mature_profiles_0_300_5.csv'
-    create_embedded_profiles(embedded_profiles_path, samples_file, model)
+    samples_file = "/Users/royjudes/Desktop/miRNA embedding project/bronchus/profiles_matures_dataset.csv"
+    # embedded_profiles_path = 'embedded_mature_profiles_0_300_5.csv'
+    # create_embedded_profiles(embedded_profiles_path, samples_file, model)
 
-    embeddings_file_name = 'mature_miRNA_embeddings_kidney.csv'
+    embeddings_file_name = 'mature_miRNA_embeddings_bronchus.csv'
     create_miRNA_embeddings_file(embeddings_file_name, samples_file, model)
 
 
@@ -240,8 +240,8 @@ def main():
 # df.sort_values(ascending=False, inplace=True, by='cos_sim')
 # df.to_csv('/Users/royjudes/Desktop/miRNA embedding project/miRNAs_cossim_kidney_desc.csv')
 
-counts_dict = load_avg_mirna_counts_dict('/Users/royjudes/Desktop/miRNA embedding project/avg_mature_mirna_counts_rpm_kidney.csv')
-embeddings_dictionary = load_miRNA_embeddings_dictionary('/Users/royjudes/Desktop/miRNA embedding project/mature_miRNA_embeddings_kidney.csv')
+counts_dict = load_avg_mirna_counts_dict('/Users/royjudes/Desktop/miRNA embedding project/bronchus/avg_mature_mirna_counts_rpm_bronchus.csv')
+embeddings_dictionary = load_miRNA_embeddings_dictionary('/Users/royjudes/Desktop/miRNA embedding project/bronchus/mature_miRNA_embeddings_bronchus.csv')
 compute_cossim_for_miRNAs(embeddings_dictionary, counts_dict)
 # main()
 

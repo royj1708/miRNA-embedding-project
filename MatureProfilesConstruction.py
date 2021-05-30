@@ -215,10 +215,18 @@ def create_mature_dataset(fasta_file_path: str, profiles_path: str, samples_file
                     continue
 
 
-profiles_path_txt = "/Users/royjudes/Desktop/miRNA embedding project/profiles/source"
-profiles_path_csv = "/Users/royjudes/Desktop/miRNA embedding project/profiles/target"
-# convert_all_profiles(profiles_path_txt, profiles_path_csv)
+profiles_path_txt = "/Users/royjudes/Desktop/miRNA embedding project/bronchus/profiles_raw"
+profiles_path_csv = "/Users/royjudes/Desktop/miRNA embedding project/bronchus/profiles_formatted"
+convert_all_profiles(profiles_path_txt, profiles_path_csv)
 
-samples_file = "/Users/royjudes/Desktop/miRNA embedding project/a/gdc_sample_sheet.tsv"
+samples_file = "/Users/royjudes/Desktop/miRNA embedding project/bronchus/gdc_sample_sheet_bronchus.tsv"
 fasta_file_path = "/Users/royjudes/Desktop/miRNA embedding project/a/mature.fa"
 create_mature_dataset(fasta_file_path, profiles_path_csv, samples_file)
+
+
+# pipeline:
+# put the path to the raw profiles folder in {profiles_path_txt} and the target folder to the formatted profiles in
+# {profiles_path_csv} and run convert_all_profiles function.
+# then, put in {samples_file} the path to the metadata about the profiles. {fasta_file_path} should stay the same.
+# then, run the create_matures_dataset function with the parameters, and you get the csv dataset of mirna as columns
+# and profiles as rows.
