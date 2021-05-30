@@ -209,17 +209,12 @@ def write_to_csv_file(record, organ: str):
 # profiles_directory = '/Users/royjudes/Desktop/miRNA embedding project/profiles'
 # documents_directory = '/Users/royjudes/Desktop/miRNA embedding project/documents'
 
-profiles_directory = '/Users/royjudes/Desktop/miRNA embedding project/profiles/target'
-documents_directory = '/Users/royjudes/Desktop/miRNA embedding project/documents'
+profiles_directory = '/Users/royjudes/Desktop/miRNA embedding project/bronchus/profiles_formatted'
+documents_directory = '/Users/royjudes/Desktop/miRNA embedding project/bronchus/documents'
 fasta_file_path = "/Users/royjudes/Desktop/miRNA embedding project/a/mature.fa"
 
 mature_dict = create_mature_names_dictionary(fasta_file_path)
 convert_all_mature_profiles(profiles_directory, documents_directory, mature_dict)
-
-# convert_all_profiles(profiles_directory, documents_directory)
-# print(create_health_condition_dictionary(SAMPLES_FILE))
-# PROFILES_DIRECTORY = "C:\\Users\\Naor\\Google Drive\\שנה ד'\\פרויקט גמר\\profiles\\Bronchus_and_lung"
-# profiles_directory = ""
 
 
 # samples_file = "/Users/royjudes/Desktop/miRNA embedding project/gdc_sample_sheet.tsv"
@@ -227,3 +222,11 @@ convert_all_mature_profiles(profiles_directory, documents_directory, mature_dict
 
 # create_dataset(profiles_directory, samples_file, 'kidney')
 # convert_all_profiles(profiles_directory, documents_directory)
+
+
+
+# pipeline:
+# putting the formatted profiles in the folder in {profiles_directory}, the path to the folder of the documents in
+# {documents_directory} and keep the fasta file as is. then, run create_matures_names_dictionary function in order to
+# get the dictionary which maps the mirs from MIMAT to miR versions, then run convert_all_mature_profiles function
+# to get the documents

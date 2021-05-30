@@ -65,8 +65,11 @@ def hypergeomtric_statistical_test(miRNA_targets_csv_path: str):
                     continue
 
                 counter += 1
-                if counter <= 3145725:
+                if counter <= 3145726:
                     continue
+
+                # if counter == 3145726:
+                #     return
 
                 miRNA_b_targets = miRNA_targets_dict[miRNA_b]
                 overlap = intersection_size(miRNA_a_targets, miRNA_b_targets)
@@ -153,12 +156,11 @@ def create_mirna_genes_amount(path: str):
 
 
 
-
 miRNA_targets_path = "/Users/royjudes/Desktop/miRNA embedding project/hsa_miRWalk_3UTR.txt"
 new_file_path = "/Users/royjudes/Desktop/miRNA embedding project/matures_target_genes_csv.csv"
-prob_threshold = 0.9
+prob_threshold = 0.95
 
 # create_miRNA_targets_dataset(miRNA_targets_path, prob_threshold, new_file_path)
 # hypergeomtric_statistical_test(new_file_path)
-# merge_cossim_and_pvalue_datasets("/Users/royjudes/Desktop/miRNA embedding project/pvalues files")
-# create_mirna_genes_amount(new_file_path)
+merge_cossim_and_pvalue_datasets("/Users/royjudes/Desktop/miRNA embedding project/pvalues files")
+create_mirna_genes_amount(new_file_path)
