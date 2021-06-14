@@ -200,6 +200,9 @@ def create_dataset(profile_path: str, samples_file_path: str, organ_name: str):
 
 
 def write_to_csv_file(record, organ: str):
+    """
+    Writes a given record in a file of the profiles' counts of each miRNA and health condition in a certain organ.
+    """
     with open(f'{organ}_samples_counts_project_names_health_condition.csv', 'a', newline='') as file:
         writer = csv.writer(file)
         writer.writerow(record)
@@ -209,8 +212,8 @@ def write_to_csv_file(record, organ: str):
 # profiles_directory = '/Users/royjudes/Desktop/miRNA embedding project/profiles'
 # documents_directory = '/Users/royjudes/Desktop/miRNA embedding project/documents'
 
-profiles_directory = '/Users/royjudes/Desktop/miRNA embedding project/bronchus/profiles_formatted'
-documents_directory = '/Users/royjudes/Desktop/miRNA embedding project/bronchus/documents'
+profiles_directory = '/Users/royjudes/Desktop/miRNA embedding project/breast/profiles_formatted'
+documents_directory = '/Users/royjudes/Desktop/miRNA embedding project/breast/documents'
 fasta_file_path = "/Users/royjudes/Desktop/miRNA embedding project/a/mature.fa"
 
 mature_dict = create_mature_names_dictionary(fasta_file_path)

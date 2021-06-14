@@ -7,6 +7,12 @@ AMOUNT_OF_GENES = 43884  # was checked separately
 
 
 def create_miRNA_targets_dataset(miRNA_targets_path: str, prob_threshold: float, new_file_path: str):
+    """
+    Creates a dataset of the miRNAs and their target genes.
+    :param miRNA_targets_path: the path to the file that contains the miRNAs, their targets and their probabilities
+    :param prob_threshold: threshold to the probability of a gene being associated with a miRNA
+    :param new_file_path: path to the created dataset file
+    """
     miRNA_targets_dict = {}
     first_line = True
     with open(miRNA_targets_path, 'r') as targets_file:
@@ -38,10 +44,17 @@ def create_miRNA_targets_dataset(miRNA_targets_path: str, prob_threshold: float,
 
 
 def intersection_size(list_1: list, list_2: list):
+    """
+    Returns the amount of overlapping objects between two lists.
+    """
     return len(set(list_1) & set(list_2))
 
 
 def hypergeomtric_statistical_test(miRNA_targets_csv_path: str):
+    """
+    Creates a dataset with the miRNA pairs and the significance of the overlap of their target genes.
+    :param miRNA_targets_csv_path: path to the miRNA targets dataset
+    """
     miRNA_targets_dict = {}
     with open(miRNA_targets_csv_path, 'r') as miRNA_targets_file:
         for record in miRNA_targets_file:
@@ -80,6 +93,10 @@ def hypergeomtric_statistical_test(miRNA_targets_csv_path: str):
 
 
 def merge_cossim_and_pvalue_datasets(pvals_directory_path: str):
+    """
+    Adds the pvalue column of each miRNA pair to the dataset with their cosine similarity.
+    :param pvals_directory_path: path to the folder that contains the dataset of the pvalues.
+    """
     miRNAs_pvalues = {}
     for (root, dirs, files) in os.walk(pvals_directory_path, topdown=True):
         for file in files:
@@ -140,6 +157,10 @@ def merge_cossim_and_pvalue_datasets(pvals_directory_path: str):
 
 
 def create_mirna_genes_amount(path: str):
+    """
+    Creates a dataset with the miRNAs and the amount of the target genes they have,
+    :param path: path to the dataset of the miRNAs and their target genes.
+    """
     miRNAs_genes = {}
     with open(path, 'r') as miRNA_targets_file:
         for record in miRNA_targets_file:

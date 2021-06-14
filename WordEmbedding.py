@@ -11,38 +11,24 @@ from numpy import dot
 from numpy.linalg import norm
 
 
-# DOCUMENTS_DIRECTORY = "C:\\Users\\royj1\\Desktop\\University\\הנדסת מערכות מידע\\שנה ד\\פרויקט גמר\\דאטה\\Testing\\b"
-# VOCABULARY_FILE = "C:\\Users\\royj1\\Desktop\\University\\הנדסת מערכות מידע\\שנה ד\\פרויקט גמר\\דאטה\\all_mirnas.xls"
-# LOG_FILE_PATH = "C:\\Users\\royj1\\Desktop\\University\\הנדסת מערכות מידע\\שנה ד\\פרויקט גמר\\דאטה\\Testing\\Log.txt"
-
-DOCUMENTS_DIRECTORY = '/Users/royjudes/Desktop/miRNA embedding project/bronchus/documents'
-# VOCABULARY_FILE = '/Users/royjudes/Desktop/miRNA embedding project/all_mirnas.xls'
-
-
-def load_vocabulary():
-    """
-    Reads the miRNAs from an excel file and stores them in a list.
-    :return: list of the miRNAs (the vocabulary).
-    """
-    vocabulary = []
-    vocab_file = xlrd.open_workbook(VOCABULARY_FILE).sheet_by_index(0)
-    for i in range(vocab_file.nrows):
-        vocabulary.append(vocab_file.cell_value(i, 0))
-
-    return vocabulary
+DOCUMENTS_DIRECTORY = '/Users/royjudes/Desktop/miRNA embedding project/breast/documents'
 
 
 def create_list_from_document(path: str):
-    document_as_list = []
+    """
+    Reads a document into a list
+    """
     with open(path, 'r') as document:
         document_as_list = document.read().split()
-    # for line in document:
-    #     document_as_list.extend(line.split())
 
     return document_as_list
 
 
 def convert_documents_to_lists():
+    """
+    Reads all the documents in the directory and converts each one to a list.
+    :return: list of all the documents as lists
+    """
     list_of_all_documents = []
     for (root, dirs, files) in os.walk(DOCUMENTS_DIRECTORY, topdown=True):
         for file in files:
@@ -57,6 +43,11 @@ def convert_documents_to_lists():
 
 
 def convert_documents_csv_to_lists(path_to_csv):
+    """
+
+    :param path_to_csv:
+    :return:
+    """
     list_of_all_documents = []
     samples_df = pd.read_csv(path_to_csv)
     samples_df = samples_df.drop('sample_type', axis=1)
@@ -73,6 +64,10 @@ def convert_documents_csv_to_lists(path_to_csv):
 
 
 def convert_documents_to_dictionary():
+    """
+    Converts all the documents to lists and stores them in a dictionary. The key is the document's filename and the
+    value is the list form of the document.
+    """
     dict_of_all_documents = {}
     for (root, dirs, files) in os.walk(DOCUMENTS_DIRECTORY, topdown=True):
         for file in files:
@@ -87,6 +82,13 @@ def convert_documents_to_dictionary():
 
 
 def compute_wmd_for_profiles(profiles_as_list, keys, health_condition_dictionary, model):
+    """
+    Given a language model, computes Word Mover Distance of each profile pair and writes it into a csv.
+    :param profiles_as_list: all the profiles as lists
+    :param keys: the filename of the documents (the profiles)
+    :param health_condition_dictionary: a dictionary that maps between a profile and its health condition
+    :param model: the language model
+    """
     with open('profiles_distances.csv', 'a', newline='') as distances_file:
         writer = csv.writer(distances_file)
         for i in range(0, len(profiles_as_list), 1):
@@ -105,9 +107,12 @@ def compute_wmd_for_profiles(profiles_as_list, keys, health_condition_dictionary
 
 # CREATING PROFILES WITH EMBEDDING REPRESENTATION
 def create_embedded_profiles(embedded_profiles_path: str, samples_file: str, model):
-    # embedded_profiles_path = 'embedded_profiles_0_300_5.csv'
-    # samples_file = '/Users/royjudes/Desktop/miRNA embedding project/kidney_samples_rpm.csv'
-
+    """
+    Creates a csv dataset in which every record is a profile, computed with the miRNA embeddings.
+    :param embedded_profiles_path: the path of the file in which the profiles are written
+    :param samples_file: path to the dataset with the raw profiles and the miRNA counts
+    :param model: the language model
+    """
     samples_df = pd.read_csv(samples_file)
     sample_types = samples_df["sample_type"]
     samples_df = samples_df.drop('sample_type', axis=1)
@@ -139,9 +144,12 @@ def create_embedded_profiles(embedded_profiles_path: str, samples_file: str, mod
 
 # CREATING CSV WITH MIRNA EMBEDDINGS
 def create_miRNA_embeddings_file(embeddings_file: str, samples_file: str, model):
-    # samples_file = '/Users/royjudes/Desktop/miRNA embedding project/kidney_samples_rpm.csv'
-    # embeddings_file = 'miRNA_embeddings_kidney.csv'
-
+    """
+    Creates a csv file with the miRNA and their embedding vectors.
+    :param embeddings_file: the file in which to write
+    :param samples_file: path to the dataset with the raw profiles and the miRNA counts
+    :param model: the language model
+    """
     samples_df = pd.read_csv(samples_file)
     samples_df = samples_df.drop('sample_type', axis=1)
     miRNAs = list(samples_df.columns)
@@ -158,6 +166,11 @@ def create_miRNA_embeddings_file(embeddings_file: str, samples_file: str, model)
 
 
 def load_miRNA_embeddings_dictionary(path: str):
+    """
+    Reads the miRNA embeddings dataset and stores it into a dictionary, where each key is the miRNA and the value is the
+    embedding vector.
+    :param path: a path to the embeddings file
+    """
     with open(path, 'r', newline='') as embeddings_file:
         csv_reader = reader(embeddings_file)
         prev_row = []
@@ -175,7 +188,13 @@ def load_miRNA_embeddings_dictionary(path: str):
 
 
 def compute_cossim_for_miRNAs(embeddings_dictionary, counts_dict):
-    with open('mature_miRNAs_cossim_bronchus.csv', 'a', newline='') as file:
+    """
+    Creates a dataset in which every record is a miRNA pair and the cosine similarity score, computed on their embedding
+    vectors.
+    :param embeddings_dictionary: dictionary with miRNA as key and its embedding vector as value
+    :param counts_dict: a dictionary with miRNA as key and its average count as value.
+    """
+    with open('mature_miRNAs_cossim_breast.csv', 'a', newline='') as file:
         writer = csv.writer(file)
         writer.writerow(['miRNA_a', 'avg_rpm_a', 'miRNA_b', 'avg_rpm_b', 'cos_sim'])
         already_computed = []
@@ -193,6 +212,10 @@ def compute_cossim_for_miRNAs(embeddings_dictionary, counts_dict):
 
 
 def load_avg_mirna_counts_dict(path: str):
+    """
+    Reads a file with each miRNA and its average count and stores it in a dictionary.
+    :param path: the path to the file
+    """
     df = pd.read_csv(path)
     df = df.transpose()
     counts_dict = {}
@@ -200,16 +223,6 @@ def load_avg_mirna_counts_dict(path: str):
         counts_dict[mir] = row[0]
 
     return counts_dict
-
-
-# def write_into_log_file(size: int, window: int, min_count: int, model: str, results):
-#     content = f"Time: {datetime.now().strftime('%d/%m/%Y %H:%M:%S')}\n" \
-#               f"Results - {model}:\n" \
-#               f"Embedding Vector Size: {size}, Context Window Size: {window}, Minimal amount of appearances " \
-#               f"to be included: {min_count}, Accuracy: {results}\n\n"
-#
-#     with open(LOG_FILE_PATH, 'a') as log_file:
-#         log_file.write(content)
 
 
 # ------------------------------------------------------ Main ----------------------------------------------------------
@@ -222,11 +235,11 @@ def main():
     model = Word2Vec(profiles_as_list, min_count=0, size=300, window=5, workers=cpu_count())
     # compute_wmd_for_profiles(profiles_as_list, keys, health_condition_dictionary, model)
 
-    samples_file = "/Users/royjudes/Desktop/miRNA embedding project/bronchus/profiles_matures_dataset.csv"
+    samples_file = "/Users/royjudes/Desktop/miRNA embedding project/breast/profiles_matures_dataset.csv"
     # embedded_profiles_path = 'embedded_mature_profiles_0_300_5.csv'
     # create_embedded_profiles(embedded_profiles_path, samples_file, model)
 
-    embeddings_file_name = 'mature_miRNA_embeddings_bronchus.csv'
+    embeddings_file_name = 'mature_miRNA_embeddings_breast.csv'
     create_miRNA_embeddings_file(embeddings_file_name, samples_file, model)
 
 
@@ -240,11 +253,10 @@ def main():
 # df.sort_values(ascending=False, inplace=True, by='cos_sim')
 # df.to_csv('/Users/royjudes/Desktop/miRNA embedding project/miRNAs_cossim_kidney_desc.csv')
 
-counts_dict = load_avg_mirna_counts_dict('/Users/royjudes/Desktop/miRNA embedding project/bronchus/avg_mature_mirna_counts_rpm_bronchus.csv')
-embeddings_dictionary = load_miRNA_embeddings_dictionary('/Users/royjudes/Desktop/miRNA embedding project/bronchus/mature_miRNA_embeddings_bronchus.csv')
-compute_cossim_for_miRNAs(embeddings_dictionary, counts_dict)
+# counts_dict = load_avg_mirna_counts_dict('/Users/royjudes/Desktop/miRNA embedding project/breast/avg_mature_mirna_counts_rpm_breast.csv')
+# embeddings_dictionary = load_miRNA_embeddings_dictionary('/Users/royjudes/Desktop/miRNA embedding project/breast/mature_miRNA_embeddings_breast.csv')
+# compute_cossim_for_miRNAs(embeddings_dictionary, counts_dict)
 # main()
-
 
 # DIFFERENT CONFIGURATIONS FOR EMBEDDINGS
 # for size in [100, 200, 300, 400, 500]:

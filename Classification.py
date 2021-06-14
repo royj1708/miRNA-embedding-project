@@ -25,12 +25,23 @@ def oversampling(features):
 
 
 def get_classifier_predictions(classifier, train_features, test_features, train_labels):
+    """
+    Trains a given classifier on a given train set and returns the classifier's predictions for the test set
+    :param classifier: the classifier
+    :param train_features: the features of the train set records
+    :param test_features: the features of the test set records
+    :param train_labels: the labels of the train set records
+    :return: the model's predictions of the test set labels
+    """
     classifier.fit(train_features, train_labels)
     predictions = classifier.predict(test_features)
     return predictions
 
 
 def get_feature_importance_list(classifier):
+    """
+    Returns the feature importances of the features according to the classifier
+    """
     return list(classifier.feature_importances_)
 
 
