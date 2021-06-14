@@ -29,6 +29,10 @@ from scipy.stats import pearsonr
 
 
 def get_diseases_for_matures(matures_diseases_file_path: str):
+    """
+    Reads the diseases file and creates a dictionary with every miRNA as key and a list of its associated diseases as
+    value.
+    """
     mirs_dict = {}
     with open(matures_diseases_file_path, 'r') as matures_diseases_file:
         for record in matures_diseases_file:
@@ -65,10 +69,17 @@ def get_diseases_for_matures(matures_diseases_file_path: str):
 
 
 def intersection_size(list_1: list, list_2: list):
+    """
+    Returns the amount of overlapping objects between two lists.
+    """
     return len(set(list_1) & set(list_2))
 
 
 def compute_jaccard_indice(mirs_diseases_dict: dict):
+    """
+    Computes the Jaccard indice for each pair of miRNAs, then creates a dataset with the results.
+    :param mirs_diseases_dict: a dictionary of miRNA as key and diseases list as value.
+    """
     with open('/Users/royjudes/Desktop/miRNA embedding project/kidney_miRNA_pairs_pvalues_cossim.csv', 'r') as pairs_file:
         first_line = True
         with open('/Users/royjudes/Desktop/miRNA embedding project/kidney_miRNA_pairs_pvalues_cossim_jaccard.csv', 'a') as pairs_file_with_jaccard:

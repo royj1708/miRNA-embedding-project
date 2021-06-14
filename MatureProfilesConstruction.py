@@ -215,11 +215,11 @@ def create_mature_dataset(fasta_file_path: str, profiles_path: str, samples_file
                     continue
 
 
-profiles_path_txt = "/Users/royjudes/Desktop/miRNA embedding project/bronchus/profiles_raw"
-profiles_path_csv = "/Users/royjudes/Desktop/miRNA embedding project/bronchus/profiles_formatted"
+profiles_path_txt = "/Users/royjudes/Desktop/miRNA embedding project/breast/profiles_raw"
+profiles_path_csv = "/Users/royjudes/Desktop/miRNA embedding project/breast/profiles_formatted"
 convert_all_profiles(profiles_path_txt, profiles_path_csv)
 
-samples_file = "/Users/royjudes/Desktop/miRNA embedding project/bronchus/gdc_sample_sheet_bronchus.tsv"
+samples_file = "/Users/royjudes/Desktop/miRNA embedding project/breast/gdc_sample_sheet_breast.tsv"
 fasta_file_path = "/Users/royjudes/Desktop/miRNA embedding project/a/mature.fa"
 create_mature_dataset(fasta_file_path, profiles_path_csv, samples_file)
 
