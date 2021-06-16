@@ -36,7 +36,7 @@ def compute_mirna_expression_correlation(mirna_expressions_file_path: str):
                     writer.writerow(record)
 
                 except:
-                    print(record)
+                    continue
 
 
 def load_miRNA_embeddings_dictionary(path: str):

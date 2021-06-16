@@ -42,25 +42,25 @@ def convert_documents_to_lists():
     return list_of_all_documents
 
 
-def convert_documents_csv_to_lists(path_to_csv):
-    """
-
-    :param path_to_csv:
-    :return:
-    """
-    list_of_all_documents = []
-    samples_df = pd.read_csv(path_to_csv)
-    samples_df = samples_df.drop('sample_type', axis=1)
-    miRNAs = list(samples_df.columns)
-
-    for index, profile in samples_df.iterrows():
-        profile_vector = []
-        for miRNA in miRNAs:
-            profile_vector.append(profile[miRNA])
-
-        list_of_all_documents.append(profile_vector)
-
-    return list_of_all_documents
+# def convert_documents_csv_to_lists(path_to_csv):
+#     """
+#
+#     :param path_to_csv:
+#     :return:
+#     """
+#     list_of_all_documents = []
+#     samples_df = pd.read_csv(path_to_csv)
+#     samples_df = samples_df.drop('sample_type', axis=1)
+#     miRNAs = list(samples_df.columns)
+#
+#     for index, profile in samples_df.iterrows():
+#         profile_vector = []
+#         for miRNA in miRNAs:
+#             profile_vector.append(profile[miRNA])
+#
+#         list_of_all_documents.append(profile_vector)
+#
+#     return list_of_all_documents
 
 
 def convert_documents_to_dictionary():
@@ -105,7 +105,8 @@ def compute_wmd_for_profiles(profiles_as_list, keys, health_condition_dictionary
                 writer.writerow(record)
 
 
-# CREATING PROFILES WITH EMBEDDING REPRESENTATION
+# CREATING PROFILES WITH EMBEDDING REPRESENTATION - created for the classification step,
+# in order to test the classification of profiles after the embedding step
 def create_embedded_profiles(embedded_profiles_path: str, samples_file: str, model):
     """
     Creates a csv dataset in which every record is a profile, computed with the miRNA embeddings.

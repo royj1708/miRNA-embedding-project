@@ -79,7 +79,7 @@ def main(samples_csv_path):
     # features = oversampling(features)
     # Labels are the values we want to predict
     labels = np.array(features['sample_type'])
-    print(Counter(labels))
+    # print(Counter(labels))
     # Remove the labels from the features
     # axis 1 refers to the columns
     features = features.drop('sample_type', axis=1)
@@ -98,7 +98,7 @@ def main(samples_csv_path):
     # SMOTE
     smt = SMOTE()
     train_features, train_labels = smt.fit_sample(train_features, train_labels)
-    print(Counter(train_labels))
+    # print(Counter(train_labels))
 
 
     # print('Training Features Shape:', train_features.shape)
@@ -120,14 +120,14 @@ def main(samples_csv_path):
     print(f"recall normal: {results_random_forest['recall_normal']}")
     print(f"recall tumor: {results_random_forest['recall_tumor']}")
     print(f"auc: {results_random_forest['auc']}", "\n")
-    print("Feature Importance:\n", random_forest_feature_importance, "\n")
-    for index, feature in enumerate(sorted(feature_importance_dict, key=feature_importance_dict.get, reverse=True)):
-        print(f"MIR: {feature}, Importance: {feature_importance_dict[feature]}")
-        if index == 100:
-            break
+    # print("Feature Importance:\n", random_forest_feature_importance, "\n")
+    # for index, feature in enumerate(sorted(feature_importance_dict, key=feature_importance_dict.get, reverse=True)):
+    #     print(f"MIR: {feature}, Importance: {feature_importance_dict[feature]}")
+    #     if index == 100:
+    #         break
 
     # -------------------------------------------- SVC --------------------------------------------
-    svc = SVC(kernel='linear')
+    svc = SVC(kernel='poly')
     svc_predictions = get_classifier_predictions(svc, train_features, test_features, train_labels)
     results_svc = get_metrics_scores(test_labels, svc_predictions)
     print("--SVC model--")

@@ -179,7 +179,7 @@ def create_mirna_genes_amount(path: str):
 
 miRNA_targets_path = "/Users/royjudes/Desktop/miRNA embedding project/hsa_miRWalk_3UTR.txt"
 new_file_path = "/Users/royjudes/Desktop/miRNA embedding project/matures_target_genes_csv.csv"
-prob_threshold = 0.95
+prob_threshold = 0.9
 
 # create_miRNA_targets_dataset(miRNA_targets_path, prob_threshold, new_file_path)
 # hypergeomtric_statistical_test(new_file_path)
