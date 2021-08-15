@@ -244,28 +244,3 @@ def main():
     create_miRNA_embeddings_file(embeddings_file_name, samples_file, model)
 
 
-    # profiles = convert_documents_csv_to_lists('/Users/royjudes/Desktop/miRNA embedding project/kidney_samples.csv')
-
-
-# df = pd.read_csv('/Users/royjudes/Desktop/miRNA embedding project/miRNAs_cossim_kidney.csv')
-# df.sort_values(ascending=True, inplace=True, by='cos_sim')
-# df.to_csv('/Users/royjudes/Desktop/miRNA embedding project/miRNAs_cossim_kidney_asc.csv')
-
-# df.sort_values(ascending=False, inplace=True, by='cos_sim')
-# df.to_csv('/Users/royjudes/Desktop/miRNA embedding project/miRNAs_cossim_kidney_desc.csv')
-
-# counts_dict = load_avg_mirna_counts_dict('/Users/royjudes/Desktop/miRNA embedding project/breast/avg_mature_mirna_counts_rpm_breast.csv')
-# embeddings_dictionary = load_miRNA_embeddings_dictionary('/Users/royjudes/Desktop/miRNA embedding project/breast/mature_miRNA_embeddings_breast.csv')
-# compute_cossim_for_miRNAs(embeddings_dictionary, counts_dict)
-# main()
-
-# DIFFERENT CONFIGURATIONS FOR EMBEDDINGS
-# for size in [100, 200, 300, 400, 500]:
-#     for window in [3, 4, 5, 6, 7]:
-#         for min_count in [0, 5, 10, 15, 20]:
-            # word2vec_model = Word2Vec(all_profiles, min_count=min_count, window=window, size=size, workers=cpu_count())
-            # print(word2vec_model.most_similar(positive=['hsa-let-7a-1', 'hsa-let-7a-2'], negative=['hsa-let-7a-3'], topn=1))
-
-            # write_into_log_file(size, window, min_count, None)
-            # we need to take all the miRNA vectors and try the classification models, then record the accuracy rate
-            # with the values of the parameters
